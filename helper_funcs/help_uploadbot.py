@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 import os
 import requests
-
+import time
 def DetectFileSize(url):
     r = requests.get(url, allow_redirects=True, stream=True)
     total_size = int(r.headers.get("content-length", 0))
