@@ -2,40 +2,43 @@
 # -*- coding: utf-8 -*-
 # (c) Shrimadhav U K
 
+import json
 # the logging things
 import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-from datetime import datetime
-import json
 import math
 import os
-import requests
 import shutil
 import subprocess
 import time
-
-# the secret configuration specific things
-if bool(os.environ.get("WEBHOOK", False)):
-    from sample_config import Config
-else:
-    from config import Config
-
-# the Strings used for this "thing"
-from translation import Translation
+from datetime import datetime
 
 import pyrogram
-logging.getLogger("pyrogram").setLevel(logging.WARNING)
-
-from helper_funcs.chat_base import TRChatBase
-from helper_funcs.display_progress import progress_for_pyrogram, humanbytes
+import requests
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 # https://stackoverflow.com/a/37631799/4723940
 from PIL import Image
 from pydrive.drive import GoogleDrive
+
+from helper_funcs.chat_base import TRChatBase
+from helper_funcs.display_progress import humanbytes, progress_for_pyrogram
+# the Strings used for this "thing"
+from translation import Translation
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+
+# the secret configuration specific things
+if bool(os.environ.get("WEBHOOK", False)):
+    from sample_config import Config
+else:
+    from sample_config import Config
+
+
+logging.getLogger("pyrogram").setLevel(logging.WARNING)
+
 
 
 @pyrogram.Client.on_callback_query()
@@ -63,7 +66,7 @@ def button(bot, update):
             )
             return False
         zip_file_contents = os.listdir(extract_dir_path)
-        type_of_extract, index_extractor, undefined_tcartxe = cb_data.split(":")
+        type_of_extract, index_extractor = cb_data.split(":")
         if index_extractor == "NONE":
             try:
                 shutil.rmtree(extract_dir_path)
@@ -143,7 +146,7 @@ def button(bot, update):
         try:
             with open(save_ytdl_json_path, "r", encoding="utf8") as f:
                 response_json = json.load(f)
-        except (FileNotFoundError) as e:
+        except (FileNotFoundError) :
             bot.delete_messages(
                 chat_id=update.message.chat.id,
                 message_ids=update.message.message_id,
@@ -261,7 +264,7 @@ def button(bot, update):
         try:
             t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT, timeout=Config.PROCESS_MAX_TIMEOUT)
         except subprocess.CalledProcessError as exc:
-            logger.warn("Status : FAIL", exc.returncode, exc.output)
+            #logger.warn("Status : FAIL", exc.returncode, exc.output)
             error_message = exc.output.decode("UTF-8").replace("please report this issue on https://yt-dl.org/bug . Make sure you are using the latest version; see  https://yt-dl.org/update  on how to update. Be sure to call youtube-dl with the --verbose flag and include its complete output.", "")
             bot.edit_message_text(
                 chat_id=update.message.chat.id,
