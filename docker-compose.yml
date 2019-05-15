@@ -1,0 +1,16 @@
+tg:
+  ports:
+    - "4458:4458"
+  #Expose the telegram-cli as a volume
+  volumes:
+    - .telegram-cli:/root/.telegram-cli
+
+bot:
+  #Build using local Dockerfile
+  build: .
+  #Link to the tg container
+  links:
+    - tg
+  #Mount the local dev directory into the /app dir in the container so we can test while we develop.
+  volumes:
+    - .:/app
