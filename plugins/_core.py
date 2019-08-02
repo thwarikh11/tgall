@@ -12,13 +12,12 @@ import time
 
 import requests
 
-import pyrogram
+import pyrogram 
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from helper_funcs.chat_base import TRChatBase
 from helper_funcs.display_progress import humanbytes, progress_for_pyrogram
 from helper_funcs.help_uploadbot import DetectFileSize, DownLoadFile
-from ParseMode import pyrogram
 # https://stackoverflow.com/a/37631799/4723940
 from PIL import Image
 # the Strings used for this "thing"
