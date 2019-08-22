@@ -9,3 +9,4 @@ hachoir
 numpy
 beautifulsoup4
 pydrive
+TgCrypto
